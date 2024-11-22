@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Estudiante</title>
+  
+</head>
+<style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            font-family: 'Century Gothic', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        /* Formulario */
+        #formulario {
+            background-color: #fff;
+            padding: 30px 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        /* Título del formulario */
+        #titulo_formulario {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .campo {
+            margin-bottom: 20px;
+        }
+
+        .campo label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        .campo input[type="text"],
+        .campo input[type="email"],
+        .campo input[type="tel"],
+        .campo input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .campo input[type="text"]:focus,
+        .campo input[type="email"]:focus,
+        .campo input[type="tel"]:focus,
+        .campo input[type="number"]:focus {
+            border-color: #48e;
+            outline: none;
+            background-color: #e7f4ff;
+            transform: scale(1.02);
+        }
+
+        /* Botón de submit */
+        #boton_enviar {
+            background-color: #48e;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        #boton_enviar:hover {
+            background-color: black;
+            transform: scale(1.05);
+        }
+
+        #boton_enviar:active {
+            background-color: black;
+        }
+
+        /* Cambiar el puntero cuando se pasa sobre los campos */
+        .campo input[type="text"]:hover,
+        .campo input[type="email"]:hover,
+        .campo input[type="tel"]:hover,
+        .campo input[type="password"]:hover,
+        #boton_enviar:hover {
+            cursor: pointer;
+        }
+    </style>
+<body>
+    <div class="formulario">
+
+
+    <h2 id="titulo_formulario">Registrar Estudiante</h2>
+    <form action="Loagin.php" method="POST">
+
+        <div class="campo">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" required>
+         </div>
+
+        <div class="campo">
+        <label for="apellido">Apellido:</label>
+        <input type="text" id="apellido" name="apellido" required>
+        </div>
+
+        <div class="campo">
+        <label for="edad">Edad:</label>
+        <input type="number" id="edad" name="edad" required min="1">
+        </div>
+        
+
+        <div class="campo">
+        <label for="genero">Género:</label>
+        <select id="genero" name="genero" required>
+            <option value="M">Masculino</option>
+            <option value="F">Femenino</option>
+        </select>
+        </div>
+        
+        <div class="campo">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        </div>
+
+        <div class="campo">
+        <label for="telefono">Teléfono (opcional):</label>
+        <input type="tel" id="telefono" name="telefono" pattern="^\d{10}$">
+        </div>
+
+        <div class="campo">
+        <label for="id_tutor">ID del Tutor:</label>
+        <select id="id_tutor" name="id_tutor">
+        
+            <?php
+                // Conexión a la base de datos
+                $conn = new mysqli('localhost', 'root', 'Solosequenadase', 'seguridadfundacion');
+                
+                if ($conn->connect_error) {
+                    die("Conexión fallida: " . $conn->connect_error);
+                }
+
+                // Consultar tutores
+                $sql = "SELECT id_tutor, nombre FROM Tutor";
+                $result = $conn->query($sql);
+
+                while ($row = $result->fetch_assoc()) {
+                    echo "<option value='" . $row['id_tutor'] . "'>" . $row['nombre'] . "</option>";
+                }
+
+                $conn->close();
+            ?>
+        </select><br><br>
+        </div>
+
+        <div class="campo">
+        <button id="boton_enviar" type="submit">Registrar</button>
+            </div>
+    </form>
+            </div>
+
+
+            <script>
+        // Cambiar el estilo de los campos al enfocar
+        const inputs = document.querySelectorAll('.campo input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.style.borderColor = '#48e';
+                input.style.backgroundColor = '#e7f4ff';
+                input.style.transform = 'scale(1.02)';
+            });
+
+            input.addEventListener('blur', () => {
+                input.style.borderColor = '#ddd';
+                input.style.backgroundColor = '#fff';
+                input.style.transform = 'scale(1)';
+            });
+        });
+
+        // Cambiar el color y tamaño del botón al pasar el mouse
+        const boton = document.getElementById('boton_enviar');
+        boton.addEventListener('mouseover', () => {
+            boton.style.backgroundColor = '#357ab8';
+            boton.style.transform = 'scale(1.05)';
+        });
+
+        boton.addEventListener('mouseout', () => {
+            boton.style.backgroundColor = '#48e';
+            boton.style.transform = 'scale(1)';
+        });
+
+        boton.addEventListener('mousedown', () => {
+            boton.style.backgroundColor = '#1d5e8c';
+        });
+
+        boton.addEventListener('mouseup', () => {
+            boton.style.backgroundColor = '#357ab8';
+        });
+    </script>
+</body>
+</html>
+
+
+<?php
+// Verificar si el formulario fue enviado
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Comprobar si las variables existen en $_POST y asignarles valores
+    $nombre = isset($_POST['nombre']) ? $_POST['nombre'] : '';
+    $apellido = isset($_POST['apellido']) ? $_POST['apellido'] : '';
+    $edad = isset($_POST['edad']) ? $_POST['edad'] : '';
+    $genero = isset($_POST['genero']) ? $_POST['genero'] : '';
+    $email = isset($_POST['email']) ? $_POST['email'] : '';
+    $telefono = isset($_POST['telefono']) ? $_POST['telefono'] : '';
+    $id_tutor = isset($_POST['id_tutor']) ? $_POST['id_tutor'] : '';
+
+    // Validación de edad
+    if (empty($edad) || !is_numeric($edad) || $edad <= 0) {
+        die("La edad debe ser un número entero válido.");
+    }
+
+    // Conexión a la base de datos
+    $servername = "localhost";
+    $username = "root";
+    $password = "Solosequenadase";
+    $database = "seguridadfundacion";
+
+    $conn = new mysqli($servername, $username, $password, $database);
+
+    if ($conn->connect_error) {
+        die("Conexión fallida: " . $conn->connect_error);
+    }
+
+    // Insertar datos en la base de datos
+    $sql = "INSERT INTO Estudiante (nombre, apellido, edad, genero, email, telefono, id_tutor) 
+            VALUES ('$nombre', '$apellido', '$edad', '$genero', '$email', '$telefono', '$id_tutor')";
+
+if ($conn->query($sql) === TRUE) {
+    echo '<div style="background-color: green; color: white; padding: 10px;">Estudiante registrado con éxito</div>';
+} else {
+    echo '<div style="background-color: red; color: white; padding: 10px;">Error al registrar estudiante: ' . $conn->error . '</div>';
+}
+
+    $conn->close();
+} else {
+    echo "El formulario no ha sido enviado.";
+}
+?>
